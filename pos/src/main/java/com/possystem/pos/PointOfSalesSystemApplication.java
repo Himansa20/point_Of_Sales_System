@@ -8,6 +8,7 @@ public class PointOfSalesSystemApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PointOfSalesSystemApplication.class, args);
+                //mvn spring-boot:run
 	}
 
 }
