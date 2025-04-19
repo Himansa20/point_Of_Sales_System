@@ -15,5 +15,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserDTO {
    private int id;
+//<<<<<<< HEAD
    private String name;
+//=======
+   private String user;
+//>>>>>>> fdd7c5254b3082338dc26244341ca468d8964db2
 }

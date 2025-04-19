@@ -1,3 +1,7 @@
+//<<<<<<< HEAD
+//=======
+
+//>>>>>>> fdd7c5254b3082338dc26244341ca468d8964db2
 package com.possystem.pos.service;
 
 import com.possystem.pos.dto.UserDTO;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class UserService {
+//<<<<<<< HEAD
 
     @Autowired
     private UserRepo userRepo;
@@ -44,4 +49,17 @@ public class UserService {
         User user = userRepo.getUserById(userId);
         return modelMapper.map(user,UserDTO.class);
         }
+//=======
+ @Autowired
+ private UserRepo userRepo;
+ 
+  @Autowired
+  private ModelMapper modelMapper;
+  
+  public List<UserDTO> getAlluser(){
+  List<User>UserList=userRepo.findAll();
+  return modelMapper.map(UserList, new TypeToken<List<UserDTO>>(){
+  }.getType());
+  }
+//>>>>>>> fdd7c5254b3082338dc26244341ca468d8964db2
 }
