@@ -17,7 +17,7 @@ public class UserDTO {
    private int id;
 
    private String name;
-//=======
-   private String user;
+
+//   private String user;
 
 }
