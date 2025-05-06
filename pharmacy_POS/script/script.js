@@ -1,0 +1,80 @@
+const form = document.getElementById('loginForm');
+
+// form.addEventListener('submit', (e) => {
+//   e.preventDefault();
+//   const username = form.username.value.trim();
+//   const password = form.password.value;
+
+//   if (!username || !password) {
+//     alert('Please fill in both username/email and password.');
+//     return;
+//   }
+
+//   // Placeholder action for login submission
+//   alert('Logging in as ' + username);
+//   form.reset();
+// });
+
+document.addEventListener('input', function (e) {
+  if (e.target.classList.contains('qty-input') || e.target.classList.contains('type-select')) {
+    const row = e.target.closest('tr');
+    const qtyInput = row.querySelector('.qty-input');
+    const typeSelect = row.querySelector('.type-select');
+    const unitPrice = parseFloat(row.cells[3].textContent);
+    
+    let quantity = parseInt(qtyInput.value) || 0;
+    const type = typeSelect.value;
+
+    // Handle conversions
+    if (type === 'card') {
+      quantity *= 10; // 1 card = 10 tablets
+    } else if (type === 'bottle') {
+      quantity = 1; // typically sold per bottle
+      qtyInput.value = 1;
+      qtyInput.disabled = true;
+    } else {
+      qtyInput.disabled = false;
+    }
+
+    const subtotal = quantity * unitPrice;
+    row.querySelector('.row-subtotal').textContent = subtotal.toFixed(2);
+
+    updateTotals();
+  }
+});
+
+function updateTotals() {
+  let total = 0;
+  document.querySelectorAll('.row-subtotal').forEach(sub => {
+    total += parseFloat(sub.textContent);
+  });
+
+  const tax = total * 0.05;
+  const discount = 0;
+  const final = total + tax - discount;
+
+  document.getElementById('subtotal').textContent = total.toFixed(2);
+  document.getElementById('tax').textContent = tax.toFixed(2);
+  document.getElementById('discount').textContent = discount.toFixed(2);
+  document.getElementById('total').textContent = final.toFixed(2);
+}
+
+//sale Page
+const employee = document.getElementById('emp');
+const optionBox = document.querySelector('.option');
+
+// Toggle option box on employee name click
+employee.addEventListener('click', function (e) {
+  e.stopPropagation(); // Prevent click from bubbling to document
+  optionBox.style.display = (optionBox.style.display === 'block') ? 'none' : 'block';
+});
+
+// Hide option box when clicking outside
+document.addEventListener('click', function () {
+  optionBox.style.display = 'none';
+});
+
+// Prevent closing when clicking inside the option box itself
+optionBox.addEventListener('click', function (e) {
+  e.stopPropagation();
+});

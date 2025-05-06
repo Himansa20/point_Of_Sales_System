@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pharmacy POS System</title>
+  <style>
+    
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+    /* Reset & Basic */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Nunito", sans-serif;
+}
+
+body {
+  background-color: #f5f9f6;
+  color: #333;
+  padding: 20px;
+}
+
+/* Header */
+header {
+  display: flex;
+  /* justify-content: space-between; */
+  gap: 35rem;
+  align-items: center;
+  background-color: #60b5ff;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Search Section */
+.search-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-section input {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #60b5ff;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.search-section button {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Cart Section */
+.cart-section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.cart-section h2 {
+  margin-bottom: 10px;
+}
+
+/* Table */
+#cartTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#cartTable th, #cartTable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+#cartTable th {
+  background-color: #f4f4f4;
+}
+
+/* Totals */
+.totals p, .totals h3 {
+  margin: 5px 0;
+}
+
+.totals h3 {
+  margin-top: 10px;
+  color: #27ae60;
+}
+
+/* Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.action-buttons button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#clearBtn {
+  background-color: #e74c3c;
+  color: white;
+}
+#clearBtn:hover {
+  background-color: #eb6253;
+  color: white;
+}
+#payBtn {
+  background-color: #60b5ff;
+  color: white;
+}
+#payBtn:hover {
+  background-color: #7dbef8;
+  color: white;
+}
+/* Sales Summary */
+.sales-summary {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+.option{
+    border: 1px solid #757575;
+    margin-top: .5rem;
+    padding: .5rem;
+    border-radius: .1rem;
+    background-color: #fff;
+}
+.logout,.balance-trill{
+    font-weight: 700;
+}
+.balance-trill:hover a{
+    color: #27ae60;
+}
+.logout a{
+    text-decoration: none;
+    color: #757575;
+}
+.logout:hover a{
+    color: #e74c3c;
+}
+.balance-trill a{
+    text-decoration: none;
+    color: #757575;
+}
+.option{
+  /* display: none; */
+  position: absolute;
+  left: 80%;
+  display: none;
+}
+#emp{
+    cursor: pointer;
+}
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <h1>💊 Healthguard Pharmacy</h1>
+    </div>
+    <div class="header-right">
+      <span>Logged in:
+        <strong id="emp">Employee01<svg fill="#ffffff" height="10px" width="10px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="XMLID_225_" d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393 c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393 s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z">
+      </path> </g></svg></span></strong>
+      <div class="option">
+        <p class="logout"><a href="/index.html">Logout</a></p>
+        <p class="balance-trill"><a href="#">Balance trill</a></p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Search -->
+    <section class="search-section">
+      <input type="text" id="searchBar" placeholder="Search medicine..." />
+      <button id="searchBtn">Search</button>
+    </section>
+    <section class="cart-section">
+      <h2>🧾 Current Bill</h2>
+      <table id="cartTable">
+        <thead>
+          <tr>
+            <th>Medicine</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Subtotal
+            </th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+            <td>Vitamin C</td>
+            <td>        <select class="type-select">
+                <option value="tablet">Tablet</option>
+                <option value="bottle">Bottle</option>
+                <option value="card">Card</option>
+                <option value="custom">Custom</option>
+              </select></td>
+              <td><input type="number" class="qty-input" value="1" min="1"></td>
+              <td>2.00</td>
+              <td>Rs.23</td>
+              <td><button class="remove-btn">❌</button></td>
+          <!-- Medicine rows will be added dynamically -->
+        </tbody>
+      </table>
+
+      <!-- Totals -->
+      <div class="totals">
+        <p>Subtotal: Rs. <span id="subtotal">0.00</span></p>
+        <p>Tax (5%): Rs. <span id="tax">0.00</span></p>
+        <p>Discount: Rs. <span id="discount">0.00</span></p>
+        <h3>Total: Rs. <span id="total">0.00</span></h3>
+      </div>
+
+      <div class="action-buttons">
+        <button id="clearBtn">🧹 Clear Cart</button>
+        <button id="payBtn">💰 Pay and Save Sale</button>
+      </div>
+    </section>
+
+    <!-- Today's Total Sales -->
+    <section class="sales-summary">
+      <h2>📈 Today's Total Sales: Rs. <span id="todaySales">0.00</span></h2>
+    </section>
+  </main>
+<script src="/script/script.js"></script>
+</body>
+</html>
