@@ -1,19 +1,41 @@
+document.getElementById("loginForm").addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  const response = await fetch("http://localhost:8080/api/v1/login", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+  });
+
+  if (response.ok) {
+      window.location.href = "/pages/employee.html";
+  } else {
+      const errorText = await response.text();
+      alert("Login failed: " + errorText);
+  }
+});
+
 const form = document.getElementById('loginForm');
 
-// form.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   const username = form.username.value.trim();
-//   const password = form.password.value;
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const username = form.username.value.trim();
+  const password = form.password.value;
 
-//   if (!username || !password) {
-//     alert('Please fill in both username/email and password.');
-//     return;
-//   }
+  if (!username || !password) {
+    alert('Please fill in both username/email and password.');
+    return;
+  }
 
-//   // Placeholder action for login submission
-//   alert('Logging in as ' + username);
-//   form.reset();
-// });
+  // Placeholder action for login submission
+  alert('Logging in as ' + username);
+  form.reset();
+});
 
 document.addEventListener('input', function (e) {
   if (e.target.classList.contains('qty-input') || e.target.classList.contains('type-select')) {
@@ -78,3 +100,5 @@ document.addEventListener('click', function () {
 optionBox.addEventListener('click', function (e) {
   e.stopPropagation();
 });
+
+

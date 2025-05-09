@@ -9,7 +9,10 @@ import lombok.Data;
 import lombok.extern.slf4j.XSlf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -17,7 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 public class AdminController {
     private AdminService adminService;
-
+    private AdminRepository adminRepository;
+    private final PasswordEncoder passwordEncoder;
     @PostMapping("/register")
     public ResponseEntity<AdminEntity> Register(@RequestBody AdminEntity admin) {
         adminService.registerAdmin(admin);
@@ -25,13 +29,20 @@ public class AdminController {
 
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AdminLoginDTO loginDTO) {
-        boolean isValid = adminService.authenticateAdmin(loginDTO.getUsername(), loginDTO.getPassword());
-        if (isValid) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AdminEntity loginRequest) {
+        Optional<AdminEntity> optionalAdmin = adminRepository.findByUsername(loginRequest.getUsername());
+
+        if (optionalAdmin.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
+
+        AdminEntity admin = optionalAdmin.get();
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), admin.getPassword())) {
+            return new ResponseEntity<>("Invalid password", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>("Login successful", HttpStatus.OK);
     }
+
 }
