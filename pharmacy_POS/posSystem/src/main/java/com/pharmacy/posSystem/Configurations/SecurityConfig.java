@@ -22,7 +22,17 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/login", "/api/v1/register","/api/v1/addemployee","/api/v1/loginemp").permitAll()
+                        .requestMatchers(
+                                "/api/v1/login",
+                                "/api/v1/getemp",
+                                "/api/v1/update/**",  // Note the /** to match any path after update/
+                                "/api/v1/register",
+                                "/api/v1/addemployee",
+                                "/api/v1/loginemp",
+                                "/api/v1/getone",
+                                "/api/v1/update",
+                                "/api/v1/delete"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

@@ -1,21 +1,25 @@
 package com.pharmacy.posSystem.App.Controllers;
 
 
+import com.pharmacy.posSystem.App.dto.EmployeeDTO;
 import com.pharmacy.posSystem.App.dto.EmployeeLoginDTO;
-import com.pharmacy.posSystem.Domain.Entity.AdminEntity;
+
+import com.pharmacy.posSystem.App.dto.Response.EmployeGeneral;
 import com.pharmacy.posSystem.Domain.Entity.EmployeeEntity;
+import com.pharmacy.posSystem.Domain.Exception.ResourceNotFoundException;
 import com.pharmacy.posSystem.Domain.Service.EmployeeService;
 import com.pharmacy.posSystem.External.Repository.EmployeeRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,13 +30,14 @@ public class EmployeeControllers {
     private final PasswordEncoder passwordEncoder;
     private EmployeeService employeeService;
     private EmployeeRepository employeeRepository;
+    private final ModelMapper modelMapper;
 
     @PostMapping("/addemployee")
-
     public ResponseEntity<EmployeeEntity> registerEmployee(@RequestBody EmployeeEntity employeeEntity) {
         employeeService.registerEmployee(employeeEntity);
         return new ResponseEntity<>(employeeEntity, HttpStatus.CREATED);
     }
+
     //Employe loging
     @PostMapping("/loginemp")
     public ResponseEntity<?> employeelogin(@RequestBody EmployeeLoginDTO loginRequest) {
@@ -50,4 +55,25 @@ public class EmployeeControllers {
         response.put("username", employee.getUsername());
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/getemp")
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+        List<EmployeeDTO> employees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(employees);
+    }
+
+    @GetMapping("/getone")
+    public ResponseEntity<EmployeGeneral> getEmployeeById(@RequestParam Integer id) {
+        return employeeService.getEmplooye(id);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateEmployee(@RequestBody EmployeGeneral employeGeneral) {
+        return employeeService.updateEmployee(employeGeneral);
+    }
+
+    @DeleteMapping("/delete")
+        public ResponseEntity<String> deleteEmployee(@RequestParam Integer id) {
+        return employeeService.deleteStudent(id);
+        }
 }

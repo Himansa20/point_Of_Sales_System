@@ -13,7 +13,7 @@
   <main class="login-container" role="main" aria-label="Login form for Pharmacy Management System">
     <header class="login-header">
       <h1>Healthguard Pharmacy</h1>
-      <p>Cashier Log in</p>
+      <p class="cashier">Cashier Log in</p>
     </header>
     <form id="loginForm" novalidate>
       <label for="username">Username</label>
@@ -26,6 +26,30 @@
     </form>
     <div class="footer">© 2025 Pharmacy Management System</div>
   </main>
-<script src="/script/script.js"></script>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+  
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    console.log(password)
+    const response = await fetch("http://localhost:8080/api/v1/loginemp", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+
+    });
+
+    if (response.ok) {
+        window.location.href = "/pages/cashier.html";
+    } else {
+        const errorText = await response.text();
+        alert("Login failed: " + errorText);
+    }
+  });
+  </script>
+<!-- <script src="/script/employee.js"></script> -->
 </body>
 </html>

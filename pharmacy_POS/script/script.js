@@ -81,24 +81,6 @@ function updateTotals() {
   document.getElementById('total').textContent = final.toFixed(2);
 }
 
-//sale Page
-const employee = document.getElementById('emp');
-const optionBox = document.querySelector('.option');
 
-// Toggle option box on employee name click
-employee.addEventListener('click', function (e) {
-  e.stopPropagation(); // Prevent click from bubbling to document
-  optionBox.style.display = (optionBox.style.display === 'block') ? 'none' : 'block';
-});
-
-// Hide option box when clicking outside
-document.addEventListener('click', function () {
-  optionBox.style.display = 'none';
-});
-
-// Prevent closing when clicking inside the option box itself
-optionBox.addEventListener('click', function (e) {
-  e.stopPropagation();
-});
 
 

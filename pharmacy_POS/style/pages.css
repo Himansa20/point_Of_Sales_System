@@ -149,12 +149,24 @@ input{
   color: white;
   font-weight: 700;
 }
-
+.logout a{
+  font-size: 1.8rem;
+  position: absolute;
+  top: 0;
+  right: 8rem;
+  top: 3.5rem;
+  text-decoration: none;
+  color: #333;
+}
+.logout:hover a{
+ color: #dc3545;
+ cursor: pointer;
+}
 .btn.add {
   background-color: #28a745; /* Green */
 }
 .btn.add:hover {
-  background-color: #4eb967; /* Green */
+  background-color: #4eb967;
 }
 .btn.update {
   background-color: #fcd03f; 
