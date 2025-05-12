@@ -115,10 +115,10 @@ function disableButton() {
 }
 //Enable Add employee Button
 function enableButton() {
-    const addEmployeeButton = document.getElementById("btn");
-    addEmployeeButton.removeAttribute("disabled");
-    addEmployeeButton.style.color = "";
-    addEmployeeButton.style.backgroundColor = ""; 
+  const addEmployeeButton = document.getElementById("btn");
+  addEmployeeButton.removeAttribute("disabled");
+  addEmployeeButton.style.color = "";
+  addEmployeeButton.style.backgroundColor = "";
 }
 
 function addActionButtonListeners() {
@@ -134,7 +134,7 @@ function addActionButtonListeners() {
     btn.addEventListener("click", (e) => {
       const empId = e.target.getAttribute("data-id");
       deleteEmployee(empId);
-      console.log("empID"+empId)
+      console.log("empID" + empId);
     });
   });
 }
@@ -261,57 +261,55 @@ function showErrorNotification(message) {
   alert("Error: " + message);
 }
 
+document.querySelector(".btn.update").addEventListener("click", function (e) {
+  e.preventDefault(); // Prevent default form submission
+  enableButton();
+  // Collect form data
+  const form = document.getElementById("employeeForm");
+  const formData = {
+    emp_id: form.querySelector("#emp-id").value,
+    firstName: form.querySelector("#first-name").value,
+    lastName: form.querySelector("#last-name").value,
+    address: form.querySelector("#address").value,
+    nic: form.querySelector("#nic").value,
+    mobile: form.querySelector("#mobile").value,
+    dob: form.querySelector("#dob").value,
+    password: form.querySelector("#password").value,
+  };
 
+  // Basic validation
+  if (!formData.firstName || !formData.lastName || !formData.emp_id) {
+    alert("Please fill all required fields");
+    return;
+  }
 
-document.querySelector('.btn.update').addEventListener('click', function(e) {
-    e.preventDefault(); // Prevent default form submission
-    enableButton();
-    // Collect form data
-    const form = document.getElementById('employeeForm');
-    const formData = {
-        emp_id: form.querySelector('#emp-id').value,
-        firstName: form.querySelector('#first-name').value,
-        lastName: form.querySelector('#last-name').value,
-        address: form.querySelector('#address').value,
-        nic: form.querySelector('#nic').value,
-        mobile: form.querySelector('#mobile').value,
-        dob: form.querySelector('#dob').value,
-        password: form.querySelector('#password').value
-    };
-
-    // Basic validation
-    if (!formData.firstName || !formData.lastName || !formData.emp_id) {
-        alert('Please fill all required fields');
-        return;
-    }
-
-    // Send PUT request to update employee
-    fetch('http://localhost:8080/api/v1/update', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+  // Send PUT request to update employee
+  fetch("http://localhost:8080/api/v1/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => {
+      if (response.status === 404) {
+        throw new Error("Employee not found");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to update employee");
+      }
+      return response.text(); // or response.json() if you change return type
     })
-    .then(response => {
-        if (response.status === 404) {
-            throw new Error('Employee not found');
-        }
-        if (!response.ok) {
-            throw new Error('Failed to update employee');
-        }
-        return response.text(); // or response.json() if you change return type
+    .then((message) => {
+      alert("Employee updated successfully!");
+      console.log("Success:", message);
+
+      // Optional: Reset form or refresh employee list
+      form.reset();
+      fetchEmployeeData(); // If you have this function to refresh the table
     })
-    .then(message => {
-        alert('Employee updated successfully!');
-        console.log('Success:', message);
-        
-        // Optional: Reset form or refresh employee list
-        form.reset();
-        fetchEmployeeData(); // If you have this function to refresh the table
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error: ' + error.message);
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Error: " + error.message);
     });
 });
