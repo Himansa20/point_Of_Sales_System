@@ -31,7 +31,8 @@ public class SecurityConfig {
                                 "/api/v1/loginemp",
                                 "/api/v1/getone",
                                 "/api/v1/update",
-                                "/api/v1/delete"
+                                "/api/v1/delete",
+                                "/api/v1/searchdrugs"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

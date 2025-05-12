@@ -170,6 +170,31 @@ header {
 #emp{
     cursor: pointer;
 }
+.search-dropdown {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: calc(100% - 40px);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.search-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.search-item:hover {
+    background-color: #f5f5f5;
+}
+
+.search-section {
+    position: relative;
+}
   </style>
 </head>
 <body>
@@ -192,12 +217,12 @@ header {
       </div>
     </div>
   </header>
-
+<!-- <svg fill="#ffffff" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 45.402 45.402" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141 c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27 c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435 c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"></path> </g> </g></svg> -->
   <main>
     <!-- Search -->
     <section class="search-section">
       <input type="text" id="searchBar" placeholder="Search medicine..." />
-      <button id="searchBtn">Search</button>
+      <button id="AddButton">+</button>
     </section>
     <section class="cart-section">
       <h2>🧾 Current Bill</h2>
@@ -243,7 +268,6 @@ header {
         <button id="payBtn">💰 Pay and Save Sale</button>
       </div>
     </section>
-
     <!-- Today's Total Sales -->
     <section class="sales-summary">
       <h2>📈 Today's Total Sales: Rs. <span id="todaySales">0.00</span></h2>
@@ -269,6 +293,231 @@ document.addEventListener('click', function () {
 optionBox.addEventListener('click', function (e) {
   e.stopPropagation();
 });
+
+// DOM Elements
+const searchBar = document.getElementById('searchBar');
+const addButton = document.getElementById('AddButton');
+const cartTable = document.getElementById('cartTable').querySelector('tbody');
+const subtotalEl = document.getElementById('subtotal');
+const taxEl = document.getElementById('tax');
+const discountEl = document.getElementById('discount');
+const totalEl = document.getElementById('total');
+const todaySalesEl = document.getElementById('todaySales');
+const clearBtn = document.getElementById('clearBtn');
+const payBtn = document.getElementById('payBtn');
+
+// Current cart and sales data
+let cart = [];
+let todaySales = 0;
+
+// Search drugs with debounce
+let searchTimeout;
+// NEW CODE (paste this)
+async function searchDrugs(keyword) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/v1/searchdrugs?keyword=${encodeURIComponent(keyword)}`);
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.status !== "success") {
+            throw new Error(data.message || "Search failed");
+        }
+        
+        showSearchSuggestions(data.data);
+    } catch (error) {
+        console.error("Search error:", error.message);
+        const dropdown = document.querySelector('.search-dropdown');
+        if (dropdown) dropdown.remove();
+        
+        // Show user-friendly error message
+        alert(`Search failed: ${error.message}`);
+    }
+}
+
+// Update event listener
+searchBar.addEventListener('input', function() {
+    const keyword = this.value.trim();
+    if (keyword.length >= 2) {
+        searchDrugs(keyword);
+    } else {
+        // Clear dropdown if search term is too short
+        const dropdown = document.querySelector('.search-dropdown');
+        if (dropdown) dropdown.remove();
+    }
+});
+
+// Show search suggestions
+function showSearchSuggestions(drugs) {
+    // Clear previous suggestions
+    const existingDropdown = document.querySelector('.search-dropdown');
+    if (existingDropdown) existingDropdown.remove();
+    
+    if (drugs.length === 0) return;
+    
+    // Create dropdown
+    const dropdown = document.createElement('div');
+    dropdown.className = 'search-dropdown';
+    
+    drugs.forEach(drug => {
+        const item = document.createElement('div');
+        item.className = 'search-item';
+        item.textContent = `${drug.name} (${drug.type}) - Rs.${drug.unitPrice}`;
+        item.addEventListener('click', () => {
+            addToCart(drug);
+            dropdown.remove();
+            searchBar.value = '';
+        });
+        dropdown.appendChild(item);
+    });
+    
+    document.querySelector('.search-section').appendChild(dropdown);
+}
+
+// Add to cart from search
+function addToCart(drug) {
+    const existingItem = cart.find(item => item.id === drug.id);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            ...drug,
+            quantity: 1
+        });
+    }
+    renderCart();
+}
+
+// Add button click handler
+addButton.addEventListener('click', function() {
+    const keyword = searchBar.value.trim();
+    if (keyword) {
+        fetch(`http://localhost:8080/api/v1/searchdrugs?keyword=${encodeURIComponent(keyword)}`)
+            .then(response => response.json())
+            .then(drugs => {
+                if (drugs.length > 0) {
+                    addToCart(drugs[0]);
+                    searchBar.value = '';
+                }
+            });
+    }
+});
+
+// Enter key handler
+searchBar.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        addButton.click();
+    }
+});
+
+// Render cart
+function renderCart() {
+    cartTable.innerHTML = '';
+    let subtotal = 0;
+    
+    cart.forEach(item => {
+        const row = document.createElement('tr');
+        const itemSubtotal = item.unitPrice * item.quantity;
+        subtotal += itemSubtotal;
+        
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>
+                <select class="type-select" data-id="${item.id}">
+                    <option value="tablet" ${item.type === 'tablet' ? 'selected' : ''}>Tablet</option>
+                    <option value="bottle" ${item.type === 'bottle' ? 'selected' : ''}>Bottle</option>
+                    <option value="card" ${item.type === 'card' ? 'selected' : ''}>Card</option>
+                    <option value="custom" ${item.type === 'custom' ? 'selected' : ''}>Custom</option>
+                </select>
+            </td>
+            <td><input type="number" class="qty-input" value="${item.quantity}" min="1" data-id="${item.id}"></td>
+            <td>Rs.${item.unitPrice.toFixed(2)}</td>
+            <td>Rs.${itemSubtotal.toFixed(2)}</td>
+            <td><button class="remove-btn" data-id="${item.id}">❌</button></td>
+        `;
+        cartTable.appendChild(row);
+    });
+    
+    // Add event listeners to dynamic elements
+    document.querySelectorAll('.type-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const item = cart.find(i => i.id == this.dataset.id);
+            if (item) item.type = this.value;
+            renderCart();
+        });
+    });
+    
+    document.querySelectorAll('.qty-input').forEach(input => {
+        input.addEventListener('change', function() {
+            const item = cart.find(i => i.id == this.dataset.id);
+            if (item) {
+                item.quantity = parseInt(this.value) || 1;
+                renderCart();
+            }
+        });
+    });
+    
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            cart = cart.filter(i => i.id != this.dataset.id);
+            renderCart();
+        });
+    });
+    
+    // Calculate totals
+    const tax = subtotal * 0.05;
+    const discount = 0; // Can implement discount logic later
+    const total = subtotal + tax - discount;
+    
+    subtotalEl.textContent = subtotal.toFixed(2);
+    taxEl.textContent = tax.toFixed(2);
+    discountEl.textContent = discount.toFixed(2);
+    totalEl.textContent = total.toFixed(2);
+}
+
+// Clear cart
+clearBtn.addEventListener('click', function() {
+    cart = [];
+    renderCart();
+});
+
+// Process payment
+payBtn.addEventListener('click', function() {
+    if (cart.length === 0) {
+        alert('Cart is empty!');
+        return;
+    }
+    
+    const total = parseFloat(totalEl.textContent);
+    todaySales += total;
+    todaySalesEl.textContent = todaySales.toFixed(2);
+    
+    // Here you would send the sale data to your backend
+    const saleData = {
+        items: cart,
+        subtotal: parseFloat(subtotalEl.textContent),
+        tax: parseFloat(taxEl.textContent),
+        discount: parseFloat(discountEl.textContent),
+        total: total,
+        timestamp: new Date()
+    };
+    
+    console.log('Sending to backend:', saleData);
+    // fetch('/api/sales', { method: 'POST', body: JSON.stringify(saleData) })
+    
+    cart = [];
+    renderCart();
+    alert('Payment processed successfully!');
+});
+
+// Initialize
+renderCart();
+
+
   </script>
 <!-- <script src="/script/employee.js"></script> -->
 </body>
