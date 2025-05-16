@@ -23,7 +23,6 @@ public class AdminService {
 
         // Hash password
         adminEntity.setPassword(passwordEncoder.encode(admin.getPassword()));
-
         adminRepository.save(adminEntity);
         return new ResponseEntity<>(adminEntity, HttpStatus.OK);
     }
