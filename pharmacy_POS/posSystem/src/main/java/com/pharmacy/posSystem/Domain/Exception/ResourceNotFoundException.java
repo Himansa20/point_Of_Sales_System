@@ -1,3 +1,4 @@
+
 package com.pharmacy.posSystem.Domain.Exception;
 
 import org.springframework.http.HttpStatus;
@@ -17,3 +18,4 @@ public class ResourceNotFoundException extends RuntimeException {
         super(message, cause);
     }
 }
+

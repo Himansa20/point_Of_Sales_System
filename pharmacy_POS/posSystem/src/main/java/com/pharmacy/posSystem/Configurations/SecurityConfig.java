@@ -25,7 +25,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/login",
                                 "/api/v1/getemp",
-                                "/api/v1/update/**",  // Note the /** to match any path after update/
+                                "/api/v1/update/",  // Note the /** to match any path after update/
                                 "/api/v1/register",
                                 "/api/v1/addemployee",
                                 "/api/v1/loginemp",
@@ -43,13 +43,13 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
+                registry.addMapping("/")
                         .allowedOrigins("*")  // Allow all origins (for testing)
                         .allowedMethods("*");
             }
