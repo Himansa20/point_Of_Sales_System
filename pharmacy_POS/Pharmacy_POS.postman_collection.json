@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "4732b18a-775c-4892-b30b-893477422eaa",
+		"name": "Pharmacy_POS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44142701",
+		"_collection_link": "https://thathsarahimansa.postman.co/workspace/7f8a8eb7-98a8-48f5-84e5-c2613c040c58/collection/44142701-4732b18a-775c-4892-b30b-893477422eaa?action=share&source=collection_link&creator=44142701"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"adminCD\",\r\n    \"password\":\"AdminCD@25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/register",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"AdminTH\",\r\n    \"password\":\"AdminTH@25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "employee",
+			"item": [
+				{
+					"name": "EmployeeRegister",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\":\"Thathsara\",\r\n    \"lastName\":\"Himansa\",\r\n    \"nic\":\"2000006802786\",\r\n    \"mobile\":\"703034493\",\r\n    \"address\":\"Bope,padukka\",\r\n    \"dob\":\"2000-03-08\",\r\n    \"password\":\"Th123@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/addemployee",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"addemployee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "employeeLoging",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"thahim\",\r\n    \"password\":\"Th123@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/loginemp",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"loginemp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getEmployeById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"adminCD\",\r\n    \"password\":\"AdminCD@25\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/getone?id=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"getone"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmployee",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"emp_id\":1,\r\n    \"firstName\":\"Thathsara\",\r\n    \"lastName\":\"Mudunkotuwa\",\r\n    \"address\":\"Bope, Padukka\",\r\n    \"nic\":\"200006802786\",\r\n    \"mobile\":\"0703034493\",\r\n    \"dob\":\"2000-03-08\",\r\n    \"password\":\"123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/update",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteEmployee",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"adminCD\",\r\n    \"password\":\"AdminCD@25\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/delete?id=252",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "252"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Drug",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"adminCD\",\r\n    \"password\":\"AdminCD@25\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/searchdrugs?keyword=Amox",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"searchdrugs"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "Amox"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -6,6 +6,7 @@ Use Postman API testing software
     "username":"admin",
     "password":"123"
 }
+https://thathsarahimansa.postman.co/workspace/Thathsara-Himansa's-Workspace~7f8a8eb7-98a8-48f5-84e5-c2613c040c58/collection/44142701-4732b18a-775c-4892-b30b-893477422eaa?action=share&creator=44142701
 
 These are the Drugs. Add these into the drug table in SQL DB
 
