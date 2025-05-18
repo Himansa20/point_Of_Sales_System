@@ -32,7 +32,9 @@ public class SecurityConfig {
                                 "/api/v1/getone",
                                 "/api/v1/update",
                                 "/api/v1/delete",
-                                "/api/v1/searchdrugs"
+                                "/api/v1/searchdrugs",
+                                "/api/v1/drugs/**",
+                                "/api/v1/drugs/search"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

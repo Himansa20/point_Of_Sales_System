@@ -7,6 +7,8 @@ import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
 @Data
 @Service
 @AllArgsConstructor
@@ -20,4 +22,32 @@ public class DrugService {
             throw new RuntimeException("Database error: " + e.getMessage());
         }
     }
+
+    public List<Drug> getAllDrugs() {
+        return drugRepository.findAll();
+    }
+    public Drug getDrugById(Integer id) {
+        return drugRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Drug not found"));
+    }
+    public Drug addDrug(Drug drug) {
+        return drugRepository.save(drug);
+    }
+    public Drug updateDrug(Integer id, Drug drugDetails) {
+        Drug existingDrug = drugRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Drug not found"));
+
+        existingDrug.setName(drugDetails.getName());
+        existingDrug.setUnitPrice(drugDetails.getUnitPrice());
+        existingDrug.setQuantity(drugDetails.getQuantity());
+        // add any additional fields here
+
+        return drugRepository.save(existingDrug);
+    }
+    public void deleteDrug(Integer id) {
+        Drug drug = drugRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Drug not found"));
+        drugRepository.delete(drug);
+    }
+
 }
